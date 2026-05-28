@@ -4,81 +4,264 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>루아처치 | RUAH CHURCH</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Pretendard & Noto Serif KR -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Pretendard', 'sans-serif'],
+                        serif: ['"Noto Serif KR"', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f6f6f6',
+                            100: '#e7e7e7',
+                            900: '#1a1a1a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        body { font-family: 'Noto Sans KR', sans-serif; margin: 0; padding: 0; color: #333; line-height: 1.6; }
-        header { display: flex; justify-content: space-between; padding: 20px 50px; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .logo { font-size: 24px; font-weight: bold; text-decoration: none; color: #000; }
-        nav a { margin-left: 20px; text-decoration: none; color: #555; font-weight: 500; }
-        .hero { background: #f4f4f4; text-align: center; padding: 100px 20px; }
-        .hero h1 { font-size: 48px; margin-bottom: 10px; }
-        .hero p { font-size: 20px; color: #666; }
-        .verse { background: #333; color: #fff; text-align: center; padding: 50px 20px; font-size: 22px; font-style: italic; }
-        .vision { display: flex; justify-content: space-around; padding: 80px 50px; text-align: center; background: #fff; }
-        .vision-box { width: 30%; }
-        .about { padding: 80px 50px; background: #fafafa; text-align: center; }
-        .about h2 { font-size: 32px; }
-        .about p { max-width: 800px; margin: 0 auto 20px auto; color: #555; }
-        .buttons { margin-top: 30px; }
-        .btn { padding: 15px 30px; background: #000; color: #fff; text-decoration: none; border-radius: 5px; margin: 0 10px; display: inline-block; }
-        footer { background: #222; color: #ccc; padding: 40px 50px; text-align: center; }
-        footer p { margin: 5px 0; }
+        body { font-family: 'Pretendard', sans-serif; -webkit-font-smoothing: antialiased; }
+        .bg-hero {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1511895426328-dc8714191300?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        .fade-in-up { animation: fadeInUp 1s ease-out forwards; opacity: 0; transform: translateY(20px); }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Mobile menu transition */
+        #mobile-menu { transition: max-height 0.3s ease-in-out; max-height: 0; overflow: hidden; }
+        #mobile-menu.open { max-height: 300px; }
     </style>
 </head>
-<body>
+<body class="bg-white text-gray-800">
 
-<header>
-    <a href="#" class="logo">RUAH CHURCH</a>
-    <nav>
-        <a href="#">교회소개</a>
-        <a href="#">예수동행양육과정</a>
-        <a href="#">설교</a>
-        <a href="#">루아스토리</a>
-        <a href="#">함께해요</a>
-    </nav>
-</header>
+    <!-- Header / Navigation -->
+    <header class="fixed w-full top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm transition-all" id="header">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="#" class="text-2xl font-bold tracking-tight text-gray-900">
+                        RUAH <span class="text-gray-400 font-light">CHURCH</span>
+                    </a>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#about" class="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors">교회소개</a>
+                    <a href="#training" class="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors">예수동행양육과정</a>
+                    <a href="#sermon" class="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors">설교</a>
+                    <a href="#story" class="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors">루아스토리</a>
+                    <a href="#join" class="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors">함께해요</a>
+                </nav>
 
-<section class="hero">
-    <p>Welcome Home!!</p>
-    <h1>루아처치에 오신 것을 환영합니다</h1>
-    <p>Online Faith Community | 루아처치에 여러분을 초대합니다</p>
-</section>
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-600 hover:text-gray-900 focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
 
-<section class="verse">
-    “내 안에 거하라 나도 너희 안에 거하리라”<br>
-    <span style="font-size: 16px;">- 요한복음 15:4 -</span>
-</section>
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="md:hidden bg-white border-t border-gray-100">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 shadow-lg">
+                <a href="#about" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md">교회소개</a>
+                <a href="#training" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md">예수동행양육과정</a>
+                <a href="#sermon" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md">설교</a>
+                <a href="#story" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md">루아스토리</a>
+                <a href="#join" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md">함께해요</a>
+            </div>
+        </div>
+    </header>
 
-<section class="vision">
-    <div class="vision-box">
-        <h3>루아처치의 꿈</h3>
-        <p>온라인 예배와 예수동행일기 플랫폼을 접목한 교회로 예수동행운동을 세우고, 사역을 돕는 교회입니다.</p>
-    </div>
-    <div class="vision-box">
-        <h3>루아처치의 두기둥</h3>
-        <p>루아처치는 두 기둥 <예배와 나눔>을 이루어 가고자 합니다.</p>
-    </div>
-    <div class="vision-box">
-        <h3>루아처치의 방향성</h3>
-        <p>과도한 경쟁사회에서 안식을 주고 개인주의 사회에서 안전한 공동체를 만들며 다양성을 주는 친밀한 교회를 추구합니다.</p>
-    </div>
-</section>
+    <!-- Hero Section -->
+    <section class="bg-hero h-screen flex items-center justify-center pt-20">
+        <div class="text-center px-4 max-w-4xl mx-auto">
+            <p class="text-white/80 text-lg md:text-xl font-medium tracking-widest mb-4 uppercase fade-in-up">Welcome Home</p>
+            <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight fade-in-up delay-100">
+                루아처치에 오신 것을<br/>환영합니다
+            </h1>
+            <div class="w-24 h-1 bg-white/30 mx-auto mb-6 fade-in-up delay-200"></div>
+            <p class="text-white/90 text-lg md:text-2xl font-light fade-in-up delay-300">
+                Online Faith Community<br/>
+                <span class="text-base md:text-lg mt-2 inline-block opacity-80">루아처치에 여러분을 초대합니다</span>
+            </p>
+        </div>
+    </section>
 
-<section class="about">
-    <h2>예수님과의 동행에 초점을 맞춘 루아처치에 여러분을 초대합니다</h2>
-    <p>혁신과 기술이 이끄는 시대를 살고 있습니다. 삶은 풍요로워졌으나 마음은 복잡해졌습니다. 그래서 외로운 시대가 되었습니다.</p>
-    <p>"루아처치는 과도한 경쟁 시대에 안식을 주고, 외로운 개인주의 시대에 공동체성을 부여하고, 획일성이 가득한 시대에 다양성을 존중해주는 교회가 되고자 합니다."</p>
-    <div class="buttons">
-        <a href="#" class="btn">설교영상 보러가기</a>
-        <a href="#" class="btn">루아스토리 바로가기</a>
-    </div>
-</section>
+    <!-- Verse Section -->
+    <section class="bg-brand-900 py-16 px-4">
+        <div class="max-w-3xl mx-auto text-center">
+            <svg class="w-10 h-10 mx-auto text-gray-600 mb-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+            </svg>
+            <p class="font-serif text-2xl md:text-3xl text-white leading-relaxed mb-4">
+                "내 안에 거하라 나도 너희 안에 거하리라"
+            </p>
+            <p class="text-gray-400 font-light text-lg">요한복음 15:4</p>
+        </div>
+    </section>
 
-<footer>
-    <h3>RUAH CHURCH</h3>
-    <p>루아처치는 온라인 예배와 예수동행일기 플랫폼을 기반으로 예수동행운동을 세우는 교회입니다.</p>
-    <p>주소: [루아처치 주소 입력란] | T: [전화번호 입력란]</p>
-    <p>Youtube | Instagram | Kakao</p>
-</footer>
+    <!-- Vision Section -->
+    <section id="about" class="py-24 bg-brand-50 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Core Values</h2>
+                <p class="text-gray-500">루아처치가 걸어가는 길</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <!-- Card 1 -->
+                <div class="bg-white p-10 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                    <div class="w-14 h-14 bg-gray-900 rounded-full flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">루아처치의 꿈</h3>
+                    <p class="text-gray-600 leading-relaxed text-sm">
+                        루아처치는 온라인 예배와 예수동행일기 플랫폼을 접목한 교회로 예수동행운동을 세우고, 위지엠 사역을 돕는 교회입니다.
+                    </p>
+                </div>
 
+                <!-- Card 2 -->
+                <div class="bg-white p-10 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                    <div class="w-14 h-14 bg-gray-900 rounded-full flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">루아처치의 두 기둥</h3>
+                    <p class="text-gray-600 leading-relaxed text-sm">
+                        루아처치는 흔들리지 않는 두 기둥, <strong>&lt;예배와 나눔&gt;</strong>을 우리의 삶과 온라인 공간 속에서 이루어 가고자 합니다.
+                    </p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white p-10 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                    <div class="w-14 h-14 bg-gray-900 rounded-full flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">루아처치의 방향성</h3>
+                    <p class="text-gray-600 leading-relaxed text-sm">
+                        과도한 경쟁사회에서 안식을 주고 개인주의 사회에서 안전한 공동체를 만들며 획일성 가득한 신앙에서 다양성을 주는 <strong>느슨하지만 친밀한 교회</strong>를 추구합니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="py-24 bg-white px-4">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-2xl md:text-4xl font-bold text-gray-900 mb-8 leading-tight">
+                예수님과의 동행에 초점을 맞춘<br/>
+                <span class="text-blue-600">루아처치</span>에 여러분을 초대합니다.
+            </h2>
+            
+            <div class="space-y-6 text-gray-600 text-lg leading-relaxed mb-12">
+                <p>
+                    혁신과 기술이 이끄는 시대를 살고 있습니다.<br class="hidden md:block"/> 
+                    삶은 풍요로워졌으나 마음은 복잡해졌습니다. 그래서 외로운 시대가 되었습니다.
+                </p>
+                <p class="p-6 bg-gray-50 rounded-xl border border-gray-100 italic font-medium text-gray-700">
+                    "루아처치는 과도한 경쟁 시대에 안식을 주고, 외로운 개인주의 시대에 공동체성을 부여하고,<br class="hidden md:block"/> 
+                    획일성이 가득한 시대에 다양성을 존중해주는 교회가 되고자 합니다."
+                </p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#sermon" class="px-8 py-4 bg-gray-900 text-white rounded-full font-medium hover:bg-gray-800 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all">
+                    설교영상 보러가기
+                </a>
+                <a href="#story" class="px-8 py-4 bg-white text-gray-900 border border-gray-300 rounded-full font-medium hover:bg-gray-50 transition-colors shadow-sm hover:shadow-md transform hover:-translate-y-0.5 transition-all">
+                    루아스토리 바로가기
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-16 px-4">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="col-span-1 md:col-span-2">
+                <h3 class="text-white text-2xl font-bold tracking-tight mb-4">RUAH CHURCH</h3>
+                <p class="text-sm leading-relaxed mb-6 max-w-md">
+                    루아처치는 온라인 예배와 예수동행일기 플랫폼을 기반으로 예수동행운동을 세우는 교회입니다.
+                </p>
+                <div class="flex space-x-4">
+                    <!-- Youtube Icon -->
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                    </a>
+                    <!-- Instagram Icon -->
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    </a>
+                </div>
+            </div>
+            
+            <div>
+                <h4 class="text-white font-medium mb-4">Contact Us</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><span class="block text-gray-500 mb-1">주소</span> [루아처치 주소 입력란]</li>
+                    <li><span class="block text-gray-500 mt-3 mb-1">연락처</span> T. [전화번호 입력란]</li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white font-medium mb-4">Quick Links</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="hover:text-white transition-colors">새가족 등록하기</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">예수동행일기 바로가기</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">카카오톡 채널</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto mt-12 pt-8 border-t border-gray-800 text-sm text-center md:text-left flex flex-col md:flex-row justify-between items-center">
+            <p>&copy; 2026 RUAH CHURCH. All rights reserved.</p>
+            <p class="mt-2 md:mt-0 text-gray-600">위드지저스미니스트리 (루아처치)</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // 모바일 메뉴 토글 로직
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('open');
+        });
+
+        // 스크롤 시 헤더 그림자 효과 추가
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+                header.classList.add('shadow-md');
+                header.classList.replace('bg-white/95', 'bg-white');
+            } else {
+                header.classList.remove('shadow-md');
+                header.classList.replace('bg-white', 'bg-white/95');
+            }
+        });
+    </script>
 </body>
 </html>
