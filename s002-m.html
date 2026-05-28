@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>설교 영상 · 루아처치 RUAH CHURCH</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --blanket:  #F2E0CF;
+  --autumn:   #894020;
+  --oak:      #848954;
+  --khaki:    #7C7468;
+  --mushroom: #D4C7B4;
+  --kimber:   #202023;
+
+  --bg:       #F5EAD8;
+  --bg2:      #EDE0CC;
+  --bg3:      #E5D3BA;
+  --ink:      #2A2520;
+  --line:     rgba(32,32,35,0.10);
+  --line2:    rgba(32,32,35,0.16);
+
+  --font-ko: 'Malgun Gothic', '맑은 고딕', 'Noto Sans KR', sans-serif;
+  --font-en: 'Cormorant Garamond', Georgia, serif;
+
+  --px:  clamp(24px, 6vw, 100px);
+  --py:  clamp(72px, 9vw, 130px);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-ko);
+  background: var(--bg);
+  color: var(--ink);
+  overflow-x: hidden;
+  font-weight: 400;
+}
+
+/* ════ NAV ════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px var(--px);
+  background: rgba(245,234,216,.97);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--line2);
+}
+.logo { display: flex; flex-direction: column; gap: 3px; text-decoration: none; }
+.logo-main { font-family: var(--font-ko); font-size: 20px; font-weight: 700; letter-spacing: 6px; color: var(--kimber); }
+.logo-sub  { font-size: 10px; letter-spacing: 3px; font-weight: 300; color: var(--khaki); }
+.nav-links { display: flex; gap: 40px; list-style: none; }
+.nav-links a {
+  font-family: var(--font-ko); font-size: 14px; font-weight: 400;
+  color: var(--khaki); text-decoration: none; transition: color .25s;
+  position: relative; padding-bottom: 3px;
+}
+.nav-links a::after { content:''; position:absolute; bottom:0; left:0; width:0; height:1px; background:var(--autumn); transition:width .3s; }
+.nav-links a:hover::after, .nav-links a.active::after { width:100%; }
+.nav-links a:hover, .nav-links a.active { color: var(--kimber); }
+.nav-cta {
+  font-family: var(--font-ko); font-size: 13px; font-weight: 500; letter-spacing: 1px;
+  padding: 11px 28px; background: var(--autumn); color: var(--blanket);
+  text-decoration: none; transition: background .25s;
+}
+.nav-cta:hover { background: var(--kimber); }
+
+/* ════ PAGE HERO ════ */
+.page-hero {
+  background: var(--kimber);
+  padding: 120px var(--px) 0;
+  position: relative; overflow: hidden;
+}
+.ph-tex {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 65% 70% at 75% 50%, rgba(137,64,32,.18) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 50% at 10% 80%, rgba(132,137,84,.07) 0%, transparent 50%);
+}
+.ph-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(242,224,207,.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(242,224,207,.02) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+.ph-inner { position: relative; z-index: 1; max-width: 860px; }
+.ph-tag {
+  display: flex; align-items: center; gap: 14px;
+  font-family: var(--font-ko); font-weight: 300;
+  font-size: 11px; letter-spacing: 4px; color: var(--oak);
+  margin-bottom: 22px;
+  opacity: 0; animation: up .8s .1s forwards;
+}
+.ph-tag::before { content:''; width:24px; height:1px; background:var(--oak); }
+.ph-h1 {
+  font-family: var(--font-ko); font-weight: 700;
+  font-size: clamp(52px, 10vw, 120px);
+  line-height: .95; letter-spacing: -2px; color: var(--blanket);
+  opacity: 0; animation: up .8s .25s forwards;
+}
+.ph-h1 em { font-style: normal; color: var(--autumn); }
+.ph-sub {
+  font-family: var(--font-ko); font-size: 17px; line-height: 1.95;
+  font-weight: 300; color: rgba(242,224,207,.4);
+  max-width: 480px; margin-top: 20px; word-break: keep-all;
+  opacity: 0; animation: up .8s .4s forwards;
+}
+
+/* 히어로 필터 탭 */
+.ph-filters {
+  display: flex; gap: 0; margin-top: 56px;
+  border-top: 1px solid rgba(242,224,207,.08);
+  opacity: 0; animation: up .8s .55s forwards;
+}
+.ph-filter {
+  padding: 20px 32px;
+  font-family: var(--font-ko); font-size: 13px; font-weight: 400;
+  color: rgba(242,224,207,.35);
+  border-right: 1px solid rgba(242,224,207,.06);
+  cursor: pointer; transition: all .25s;
+  background: none; border-bottom: none; border-top: none; border-left: none;
+  border-right: 1px solid rgba(242,224,207,.06);
+}
+.ph-filter:last-child { border-right: none; }
+.ph-filter:hover { color: rgba(242,224,207,.7); background: rgba(242,224,207,.04); }
+.ph-filter.on { color: var(--blanket); background: rgba(242,224,207,.07); }
+
+/* ════ FEATURED SERMON ════ */
+.featured {
+  background: var(--bg); padding: var(--py) var(--px);
+  border-bottom: 1px solid var(--line2);
+}
+.sec-tag {
+  display: flex; align-items: center; gap: 14px;
+  font-family: var(--font-ko); font-weight: 300;
+  font-size: 11px; letter-spacing: 4px; color: var(--autumn);
+  margin-bottom: 20px;
+}
+.sec-tag::before { content:''; width:24px; height:1px; background:var(--autumn); }
+
+.featured-layout {
+  display: grid; grid-template-columns: 1.4fr 1fr;
+  gap: 1px; background: var(--line2);
+  border: 1px solid var(--line2);
+  margin-top: 40px;
+}
+.featured-player {
+  background: var(--kimber);
+  position: relative; overflow: hidden;
+}
+.video-wrap {
+  position: relative; width: 100%;
+  padding-bottom: 56.25%; /* 16:9 */
+  background: var(--kimber);
+}
+.video-wrap iframe {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%; border: none;
+}
+.video-placeholder {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 20px;
+  background: var(--kimber); cursor: pointer;
+  transition: background .3s;
+}
+.video-placeholder:hover { background: #2a2a2d; }
+.vp-thumb {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, #2a2018 0%, var(--kimber) 100%);
+  opacity: .9;
+}
+.vp-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(242,224,207,.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(242,224,207,.02) 1px, transparent 1px);
+  background-size: 52px 52px;
+}
+.vp-play {
+  position: relative; z-index: 1;
+  width: 72px; height: 72px; border-radius: 50%;
+  background: var(--autumn);
+  display: flex; align-items: center; justify-content: center;
+  transition: transform .3s, background .3s;
+}
+.video-placeholder:hover .vp-play { transform: scale(1.08); background: #a34d28; }
+.vp-play svg { width: 28px; height: 28px; fill: var(--blanket); margin-left: 4px; }
+.vp-label {
+  position: relative; z-index: 1;
+  font-family: var(--font-ko); font-size: 13px; font-weight: 300;
+  color: rgba(242,224,207,.4); letter-spacing: 2px;
+}
+
+.featured-info {
+  background: var(--bg); padding: 48px 44px;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.fi-series {
+  font-family: var(--font-ko); font-weight: 300;
+  font-size: 10px; letter-spacing: 4px; color: var(--autumn);
+  margin-bottom: 14px;
+  display: flex; align-items: center; gap: 10px;
+}
+.fi-series::before { content:''; width:18px; height:1px; background:var(--autumn); }
+.fi-title {
+  font-family: var(--font-ko); font-weight: 700;
+  font-size: clamp(24px, 3vw, 36px); color: var(--kimber);
+  line-height: 1.3; margin-bottom: 16px; word-break: keep-all;
+}
+.fi-verse {
+  font-family: var(--font-ko); font-weight: 300;
+  font-size: 14px; color: var(--autumn); letter-spacing: 2px;
+  margin-bottom: 24px;
+}
+.fi-desc {
+  font-family: var(--font-ko); font-size: 15px; line-height: 1.9;
+  font-weight: 300; color: var(--khaki); margin-bottom: 32px;
+  word-break: keep-all;
+}
+.fi-meta {
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 20px 0; border-top: 1px solid var(--line2);
+  margin-bottom: 28px;
+}
+.fi-meta-row {
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--font-ko); font-size: 13px; color: var(--khaki); font-weight: 300;
+}
+.fi-meta-label {
+  font-size: 9px; letter-spacing: 3px; color: var(--autumn);
+  min-width: 48px;
+}
+.fi-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn-watch {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 32px; background: var(--autumn); color: var(--blanket);
+  font-family: var(--font-ko); font-size: 14px; font-weight: 500;
+  text-decoration: none; transition: background .25s;
+}
+.btn-watch:hover { background: var(--kimber); }
+.btn-share {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 24px;
+  border: 1px solid var(--line2); color: var(--khaki);
+  font-family: var(--font-ko); font-size: 14px; font-weight: 300;
+  text-decoration: none; background: none; cursor: pointer;
+  transition: all .25s;
+}
+.btn-share:hover { border-color: var(--autumn); color: var(--autumn); }
+
+/* ════ SERIES SECTION ════ */
+.series-sec {
+  background: var(--bg2); padding: var(--py) var(--px);
+  border-bottom: 1px solid var(--line2);
+}
+.sec-header {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: 48px; gap: 24px; flex-wrap: wrap;
+}
+.sec-h2 {
+  font-family: var(--font-ko); font-weight: 700;
+  font-size: clamp(36px, 5.5vw, 64px);
+  line-height: 1.05; letter-spacing: -1px; color: var(--kimber);
+}
+.sec-h2 em { font-style: normal; color: var(--autumn); }
+.link-all {
+  font-family: var(--font-ko); font-size: 13px; font-weight: 500;
+  color: var(--autumn); text-decoration: none;
+  display: flex; align-items: center; gap: 8px;
+  white-space: nowrap; transition: gap .25s;
+}
+.link-all:hover { gap: 14px; }
+
+.series-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--line2);
+  border: 1px solid var(--line2);
+}
+.series-card {
+  background: var(--bg2); padding: 0;
+  position: relative; overflow: hidden;
+  transition: background .3s;
+  cursor: pointer; text-decoration: none; color: inherit;
+  display: block;
+}
+.series-card:hover { background: var(--blanket); }
+.series-card::after {
+  content:''; position:absolute; bottom:0; left:0;
+  width:0; height:3px; background:var(--autumn);
+  transition:width .4s;
+}
+.series-card:hover::after { width:100%; }
+.sc-thumb {
+  aspect-ratio: 16/9; background: var(--kimber);
+  position: relative; overflow: hidden;
+}
+.sc-thumb-inner {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.sc-thumb-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, #2a2018 0%, var(--kimber) 100%);
+}
+.sc-thumb-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(242,224,207,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(242,224,207,.03) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+.sc-play {
+  position: relative; z-index: 1;
+  width: 48px; height: 48px; border-radius: 50%;
+  background: rgba(137,64,32,.8);
+  display: flex; align-items: center; justify-content: center;
+  transition: transform .3s, background .3s;
+}
+.series-card:hover .sc-play { transform: scale(1.1); background: var(--autumn); }
+.sc-play svg { width: 18px; height: 18px; fill: var(--blanket); margin-left: 3px; }
+.sc-thumb-num {
+  position: absolute; bottom: 10px; right: 14px; z-index: 1;
+  font-family: var(--font-ko); font-size: 10px; font-weight: 300;
+  color: rgba(242,224,207,.35); letter-spacing: 2px;
+}
+.sc-body { padding: 28px 32px 36px; }
+.sc-series-tag {
+  font-family: var(--font-ko); font-weight: 300;
+  font-size: 9px; letter-spacing: 4px; color: var(--autumn);
+  margin-bottom: 12px;
+}
+.sc-title {
+  font-family: var(--font-ko); font-weight: 700;
+  font-size: 20px; color: var(--kimber);
+  line-height: 1.35; margin-bottom: 10px; word-break: keep-all;
+}
+.sc-verse {
+  font-family: var(--font-ko); font-weight: 300;
+  font-size: 12px; letter-spacing: 2px; color: var(--autumn);
+  margin-bottom: 12px;
+}
+.sc-desc {
+  font-family: var(--font-ko); font-size: 13px; line-height: 1.85;
+  color: var(--khaki); font-weight: 300; margin-bottom: 20px;
+  word-break: keep-all;
+}
+.sc-foot {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 16px; border-top: 1px solid var(--line);
+}
+.sc-date {
+  font-family: var(--font-ko); font-weight: 300;
+  font-size: 11px; letter-spacing: 2px; color: var(--mushroom);
+}
+.sc-arr {
+  font-family: var(--font-ko); font-size: 13px; font-weight: 500;
+  color: var(--autumn); transition: transform .25s;
+}
+.series-card:hover .sc-arr { transform: translateX(5px); }
+
+/* ════ ALL SERMONS LIST ════ */
+.sermon-list-sec {
+  background: var(--bg); padding: var(--py) var(--px);
+  border-bottom: 1px solid var(--line2);
+}
+.filter-bar {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  margin-bottom: 48px; margin-top: 32px;
+  align-items: center;
+}
+.filter-btn {
+  font-family: var(--font-ko); font-size: 13px; font-weight: 400;
+  padding: 9px 22px;
+  border: 1px solid var(--line2);
+  color: var(--khaki); background: none; cursor: pointer;
+  transition: all .25s;
+}
+.filter-btn:hover, .filter-btn.on {
+  background: var(--autumn); border-color: var(--autumn); color: var(--blanket);
+}
+
+.sermon-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1px; background: var(--line2);
+  border: 1px solid var(--line2);
+}
+.sermon-card {
+  background: var(--bg); overflow: hidden;
+  display: flex; flex-direction: column;
+  transition: background .3s;
+  cursor: pointer; text-decoration: none; color: inherit;
+}
+.sermon-card:hover { background: var(--blanket); }
+.sermon-card::after {
+  content:''; display:block;
+  height: 2px; background: var(--autumn);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .4s;
+}
+.sermon-card:hover::after { transform: scaleX(1); }
+
+.sc2-thumb {
+  aspect-ratio: 16/9; background: var(--kimber);
+  position: relative; overflow: hidden; flex-shrink: 0;
+}
+.sc2-thumb-bg { position: absolute; inset: 0; }
+.sc2-play {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 42px; height: 42px; border-radius: 50%;
+  background: rgba(137,64,32,.75);
+  display: flex; align-items: center; justify-content: center;
+  transition: transform .3s, background .3s;
+}
+.sermon-card:hover .sc2-play { transform: translate(-50%,-50%) scale(1.1); background: var(--autumn); }
+.sc2-play svg { width: 16px; height: 16px; fill: var(--blanket); margin-left: 2px; }
+
+.sc2-body { padding: 22px 24px 28px; flex: 1; display: flex; flex-direction: column; }
+.sc2-series {
+  font-family: var(--font-ko); font-weight: 300;
+  font-size: 9px; letter-spacing: 3px; color: var(--autumn); margin-bottom: 8px;
+}
+.sc2-title {
+  font-family: var(--font-ko); font-weight: 700;
+  font-size: 17px; color: var(--kimber);
+  line-height: 1.4; margin-bottom: 8px; word-break: keep-all; flex: 1;
+}
+.sc2-verse {
+  font-family: var(--font-ko); font-weight: 300;
+  font-size: 11px; letter-spacing: 2px; color: var(--autumn); margin-bottom: 14px;
+}
+.sc2-foot {
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 1px solid var(--line); padding-top: 12px;
+}
+.sc2-date { font-family: var(--font-ko); font-weight:300; font-size:10px; letter-spacing:1px; color:var(--mushroom); }
+.sc2-preacher { font-family: var(--font-ko); font-weight:300; font-size:11px; color:var(--khaki); }
+
+/* 더보기 버튼 */
+.load-more-wrap { text-align: center; margin-top: 48px; }
+.btn-load {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 16px 52px;
+  border: 1px solid var(--line2); color: var(--khaki);
+  font-family: var(--font-ko); font-size: 14px; font-weight: 400;
+  background: none; cursor: pointer; transition: all .3s;
+}
+.btn-load:hover { border-color: var(--autumn); color: var(--autumn); background: rgba(137,64,32,.04); }
+
+/* ════ SERIES PLAYLIST ════ */
+.playlist-sec {
+  background: var(--kimber); padding: var(--py) var(--px);
+}
+.playlist-sec .sec-tag { color: var(--oak); }
+.playlist-sec .sec-tag::before { background: var(--oak); }
+.playlist-sec .sec-h2 { color: var(--blanket); }
+
+.playlist-layout {
+  display: grid; grid-template-columns: 1fr 1.6fr;
+  gap: 1px; background: rgba(242,224,207,.06);
+  border: 1px solid rgba(242,224,207,.06);
+  margin-top: 48px;
+}
+.playlist-list { background: var(--kimber); }
+.pl-item {
+  display: grid; grid-template-columns: 48px 1fr 80px;
+  align-items: center; gap: 16px;
+  padding: 22px 28px; border-bottom: 1px solid rgba(242,224,207,.05);
+  cursor: pointer; transition: background .25s, padding-left .25s;
+}
+.pl-item:hover, .pl-item.on { background: rgba(242,224,207,.05); }
+.pl-item.on { border-left: 3px solid var(--autumn); }
+.pl-n {
+  font-family: var(--font-en); font-style: italic;
+  font-size: 18px; color: var(--autumn); opacity: .6;
+}
+.pl-item.on .pl-n { opacity: 1; }
+.pl-title {
+  font-family: var(--font-ko); font-weight: 400;
+  font-size: 14px; color: rgba(242,224,207,.5);
+  line-height: 1.4; word-break: keep-all;
+}
+.pl-item.on .pl-title, .pl-item:hover .pl-title { color: rgba(242,224,207,.85); }
+.pl-date {
+  font-family: var(--font-ko); font-weight: 300;
+  font-size: 10px; color: rgba(242,224,207,.2);
+  letter-spacing: 1px; text-align: right;
+}
+
+.playlist-player { background: var(--kimber); }
+.pp-video { aspect-ratio: 16/9; background: #151518; position: relative; overflow: hidden; }
+.pp-placeholder {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+  background: linear-gradient(135deg, #2a2018 0%, #151518 100%);
+}
+.pp-play {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: var(--autumn);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: transform .3s, background .3s;
+}
+.pp-play:hover { transform: scale(1.06); background: #a34d28; }
+.pp-play svg { width: 32px; height: 32px; fill: var(--blanket); margin-left: 5px; }
+.pp-label { font-family: var(--font-ko); font-size: 13px; font-weight: 300; color: rgba(242,224,207,.3); letter-spacing: 2px; }
+.pp-info { padding: 28px 36px 36px; }
+.pp-series-tag {
+  font-family: var(--font-ko); font-weight: 300;
+  font-size: 10px; letter-spacing: 4px; color: var(--oak); margin-bottom: 10px;
+}
+.pp-title {
+  font-family: var(--font-ko); font-weight: 700;
+  font-size: clamp(20px, 2.5vw, 30px); color: var(--blanket);
+  line-height: 1.3; margin-bottom: 10px; word-break: keep-all;
+}
+.pp-verse {
+  font-family: var(--font-ko); font-weight: 300;
+  font-size: 12px; letter-spacing: 3px; color: var(--autumn); margin-bottom: 20px;
+}
+.pp-meta { display: flex; gap: 24px; flex-wrap: wrap; }
+.pp-meta-item {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-ko); font-weight: 300;
+  font-size: 12px; color: rgba(242,224,207,.3);
+}
+.pp-meta-item strong { color: rgba(242,224,207,.6); font-weight: 400; }
+
+/* ════ CTA ════ */
+.cta-sec {
+  background: var(--autumn); padding: 80px var(--px);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 40px; flex-wrap: wrap;
+}
+.cta-txt h3 {
+  font-family: var(--font-ko); font-weight: 700;
+  font-size: clamp(28px, 4vw, 48px); color: var(--blanket);
+  line-height: 1.2; margin-bottom: 12px; word-break: keep-all;
+}
+.cta-txt p {
+  font-family: var(--font-ko); font-size: 16px; line-height: 1.85;
+  font-weight: 300; color: rgba(242,224,207,.6); word-break: keep-all;
+}
+.btn-cream {
+  padding: 18px 48px; background: var(--blanket); color: var(--autumn);
+  font-family: var(--font-ko); font-size: 15px; font-weight: 700;
+  text-decoration: none; white-space: nowrap; transition: all .3s;
+}
+.btn-cream:hover { background: var(--kimber); color: var(--blanket); }
+
+/* ════ FOOTER ════ */
+footer {
+  background: #18181A; border-top: 1px solid rgba(242,224,207,.06);
+  padding: 80px var(--px) 44px;
+}
+.footer-top {
+  display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 56px; margin-bottom: 64px; padding-bottom: 64px;
+  border-bottom: 1px solid rgba(242,224,207,.07);
+}
+.f-name { font-family:var(--font-ko); font-size:20px; font-weight:700; letter-spacing:4px; color:rgba(242,224,207,.7); margin-bottom:5px; }
+.f-sub  { font-family:var(--font-ko); font-weight:300; font-size:10px; letter-spacing:3px; color:rgba(242,224,207,.2); margin-bottom:22px; }
+.f-desc { font-family:var(--font-ko); font-size:14px; line-height:1.95; color:rgba(242,224,207,.25); margin-bottom:26px; font-weight:300; word-break:keep-all; }
+.f-sns  { display:flex; gap:8px; }
+.f-s    { width:36px; height:36px; border:1px solid rgba(242,224,207,.08); display:flex; align-items:center; justify-content:center; font-family:var(--font-ko); font-size:12px; font-weight:500; color:rgba(242,224,207,.3); text-decoration:none; transition:all .3s; }
+.f-s:hover { border-color:var(--autumn); color:var(--autumn); }
+.f-col h5 { font-family:var(--font-ko); font-weight:300; font-size:9px; letter-spacing:5px; color:rgba(242,224,207,.2); margin-bottom:20px; }
+.f-col ul { list-style:none; display:flex; flex-direction:column; gap:14px; }
+.f-col a  { font-family:var(--font-ko); font-size:14px; color:rgba(242,224,207,.3); text-decoration:none; font-weight:300; transition:color .3s; display:flex; align-items:center; gap:10px; }
+.f-col a:hover { color:var(--blanket); }
+.f-bdg { font-family:var(--font-ko); font-weight:300; font-size:8px; letter-spacing:2px; padding:3px 8px; border:1px solid rgba(137,64,32,.35); color:var(--autumn); }
+.footer-bottom { display:flex; justify-content:space-between; align-items:center; font-family:var(--font-ko); font-weight:300; font-size:12px; color:rgba(242,224,207,.15); flex-wrap:wrap; gap:10px; }
+.footer-bottom a { color:var(--autumn); text-decoration:none; }
+
+/* 썸네일 색조 팔레트 */
+.t1 { background: linear-gradient(135deg, #3a2215 0%, #202023 100%) !important; }
+.t2 { background: linear-gradient(135deg, #1e2a1a 0%, #202023 100%) !important; }
+.t3 { background: linear-gradient(135deg, #2a1c10 0%, #202023 100%) !important; }
+.t4 { background: linear-gradient(135deg, #222820 0%, #202023 100%) !important; }
+.t5 { background: linear-gradient(135deg, #301a0a 0%, #202023 100%) !important; }
+.t6 { background: linear-gradient(135deg, #1a2318 0%, #202023 100%) !important; }
+
+/* ════ ANIMATIONS ════ */
+@keyframes up { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:none} }
+.rv { opacity:0; transform:translateY(28px); transition:opacity .7s ease,transform .7s ease; }
+.rv.on { opacity:1; transform:none; }
+.d1{transition-delay:.07s} .d2{transition-delay:.14s} .d3{transition-delay:.21s}
+.d4{transition-delay:.28s} .d5{transition-delay:.35s} .d6{transition-delay:.42s}
+
+/* ════ MOBILE ════ */
+@media(max-width:960px){
+  .nav-links{display:none;}
+  .featured-layout{grid-template-columns:1fr;}
+  .series-grid{grid-template-columns:1fr 1fr;}
+  .sermon-grid{grid-template-columns:1fr 1fr;}
+  .playlist-layout{grid-template-columns:1fr;}
+  .footer-top{grid-template-columns:1fr 1fr; gap:32px;}
+  .cta-sec{flex-direction:column;}
+}
+@media(max-width:600px){
+  .series-grid{grid-template-columns:1fr;}
+  .sermon-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">
+    <span class="logo-main">루아처치</span>
+    <span class="logo-sub">RUAH CHURCH · רוּחַ</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#" class="active">말씀 &amp; 설교</a></li>
+    <li><a href="index.html#community">커뮤니티</a></li>
+    <li><a href="about.html">소개</a></li>
+    <li><a href="index.html#online">온라인처치</a></li>
+  </ul>
+  <a href="index.html#join" class="nav-cta">새가족</a>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="ph-tex"></div>
+  <div class="ph-grid"></div>
+  <div class="ph-inner">
+    <div class="ph-tag">Sermon · 설교 영상</div>
+    <h1 class="ph-h1">말씀을<br><em>만나세요</em></h1>
+    <p class="ph-sub">주일 설교와 강해 시리즈를 언제 어디서든 만날 수 있습니다. 하나님의 말씀 앞에 함께 서요.</p>
+  </div>
+  <div class="ph-filters">
+    <button class="ph-filter on" onclick="filterSeries(this,'all')">전체</button>
+    <button class="ph-filter" onclick="filterSeries(this,'주일설교')">주일 설교</button>
+    <button class="ph-filter" onclick="filterSeries(this,'강해')">강해 시리즈</button>
+    <button class="ph-filter" onclick="filterSeries(this,'특별')">특별 말씀</button>
+    <button class="ph-filter" onclick="filterSeries(this,'큐티')">큐티</button>
+  </div>
+</div>
+
+<!-- FEATURED SERMON -->
+<section class="featured rv" id="featured">
+  <div class="sec-tag">Latest Sermon · 최신 설교</div>
+  <div class="featured-layout">
+    <div class="featured-player">
+      <div class="video-wrap">
+        <!-- 실제 유튜브 embed 시 아래 주석 해제, src에 YouTube ID 입력 -->
+        <!-- <iframe src="https://www.youtube.com/embed/VIDEO_ID?rel=0" allowfullscreen></iframe> -->
+        <div class="video-placeholder" onclick="playFeatured(this)">
+          <div class="vp-thumb"></div>
+          <div class="vp-grid"></div>
+          <div class="vp-play">
+            <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+          </div>
+          <div class="vp-label">영상 재생하기</div>
+        </div>
+      </div>
+    </div>
+    <div class="featured-info">
+      <div>
+        <div class="fi-series">2025 주일 설교 시리즈</div>
+        <div class="fi-title">하나님이 함께하시는<br>길을 걸으라</div>
+        <div class="fi-verse">창세기 28:10–22</div>
+        <p class="fi-desc">야곱의 광야 여정은 우리 각자의 이야기이기도 합니다. 하나님은 도망치는 자에게도, 실수투성이의 삶 위에도 찾아오십니다. 오늘 이 말씀이 여러분의 삶에 닿기를 바랍니다.</p>
+        <div class="fi-meta">
+          <div class="fi-meta-row"><span class="fi-meta-label">설교자</span>홍길동 목사</div>
+          <div class="fi-meta-row"><span class="fi-meta-label">날짜</span>2025년 5월 25일 · 주일 오전 예배</div>
+          <div class="fi-meta-row"><span class="fi-meta-label">시리즈</span>창세기 강해 Vol.3</div>
+        </div>
+      </div>
+      <div class="fi-btns">
+        <a href="#" class="btn-watch">▶ 영상 보기</a>
+        <button class="btn-share" onclick="copyLink()">🔗 공유하기</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERIES GRID -->
+<section class="series-sec rv" id="series">
+  <div class="sec-header">
+    <div>
+      <div class="sec-tag">Series · 설교 시리즈</div>
+      <h2 class="sec-h2">말씀 <em>시리즈</em></h2>
+    </div>
+    <a href="#all" class="link-all">전체 보기 →</a>
+  </div>
+  <div class="series-grid">
+    <a href="#" class="series-card rv d1">
+      <div class="sc-thumb">
+        <div class="sc-thumb-inner">
+          <div class="sc-thumb-bg t1"></div>
+          <div class="sc-thumb-grid"></div>
+          <div class="sc-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+          <div class="sc-thumb-num">8편</div>
+        </div>
+      </div>
+      <div class="sc-body">
+        <div class="sc-series-tag">GENESIS · 창세기 강해</div>
+        <div class="sc-title">믿음의 조상들을 따라 — 창세기 강해</div>
+        <div class="sc-verse">창세기 12–50장</div>
+        <p class="sc-desc">아브라함, 이삭, 야곱, 요셉의 이야기 속에서 하나님의 신실한 언약을 발견합니다.</p>
+        <div class="sc-foot">
+          <span class="sc-date">2025.03 —</span>
+          <span class="sc-arr">→</span>
+        </div>
+      </div>
+    </a>
+    <a href="#" class="series-card rv d2">
+      <div class="sc-thumb">
+        <div class="sc-thumb-inner">
+          <div class="sc-thumb-bg t2"></div>
+          <div class="sc-thumb-grid"></div>
+          <div class="sc-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+          <div class="sc-thumb-num">6편</div>
+        </div>
+      </div>
+      <div class="sc-body">
+        <div class="sc-series-tag">PSALMS · 시편 묵상</div>
+        <div class="sc-title">내 영혼아 여호와를 송축하라</div>
+        <div class="sc-verse">시편 103–150편</div>
+        <p class="sc-desc">탄식과 찬양 사이, 하나님 앞에 솔직히 나아가는 기도를 함께 배웁니다.</p>
+        <div class="sc-foot">
+          <span class="sc-date">2025.01 — 02</span>
+          <span class="sc-arr">→</span>
+        </div>
+      </div>
+    </a>
+    <a href="#" class="series-card rv d3">
+      <div class="sc-thumb">
+        <div class="sc-thumb-inner">
+          <div class="sc-thumb-bg t3"></div>
+          <div class="sc-thumb-grid"></div>
+          <div class="sc-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+          <div class="sc-thumb-num">5편</div>
+        </div>
+      </div>
+      <div class="sc-body">
+        <div class="sc-series-tag">JOHN · 요한복음 강해</div>
+        <div class="sc-title">나는 길이요 진리요 생명이니</div>
+        <div class="sc-verse">요한복음 14–17장</div>
+        <p class="sc-desc">고별 설교로 불리는 요한복음 14–17장을 통해 예수님의 마지막 약속을 만납니다.</p>
+        <div class="sc-foot">
+          <span class="sc-date">2024.11 — 12</span>
+          <span class="sc-arr">→</span>
+        </div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- ALL SERMONS GRID -->
+<section class="sermon-list-sec rv" id="all">
+  <div class="sec-header">
+    <div>
+      <div class="sec-tag">All Sermons · 전체 설교</div>
+      <h2 class="sec-h2">전체 <em>설교 목록</em></h2>
+    </div>
+  </div>
+  <div class="filter-bar">
+    <button class="filter-btn on">전체</button>
+    <button class="filter-btn">2025년</button>
+    <button class="filter-btn">2024년</button>
+    <button class="filter-btn">창세기</button>
+    <button class="filter-btn">시편</button>
+    <button class="filter-btn">요한복음</button>
+    <button class="filter-btn">특별 설교</button>
+  </div>
+  <div class="sermon-grid">
+
+    <!-- 카드 1 -->
+    <a href="#" class="sermon-card rv d1">
+      <div class="sc2-thumb">
+        <div class="sc2-thumb-bg t1"></div>
+        <div class="sc2-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+      </div>
+      <div class="sc2-body">
+        <div class="sc2-series">창세기 강해 Vol.3</div>
+        <div class="sc2-title">하나님이 함께하시는 길을 걸으라</div>
+        <div class="sc2-verse">창 28:10–22</div>
+        <div class="sc2-foot">
+          <span class="sc2-date">2025.05.25</span>
+          <span class="sc2-preacher">홍길동 목사</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 카드 2 -->
+    <a href="#" class="sermon-card rv d2">
+      <div class="sc2-thumb">
+        <div class="sc2-thumb-bg t2"></div>
+        <div class="sc2-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+      </div>
+      <div class="sc2-body">
+        <div class="sc2-series">창세기 강해 Vol.3</div>
+        <div class="sc2-title">약속을 붙드는 자의 씨름</div>
+        <div class="sc2-verse">창 32:22–32</div>
+        <div class="sc2-foot">
+          <span class="sc2-date">2025.05.18</span>
+          <span class="sc2-preacher">홍길동 목사</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 카드 3 -->
+    <a href="#" class="sermon-card rv d3">
+      <div class="sc2-thumb">
+        <div class="sc2-thumb-bg t4"></div>
+        <div class="sc2-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+      </div>
+      <div class="sc2-body">
+        <div class="sc2-series">창세기 강해 Vol.3</div>
+        <div class="sc2-title">형제를 용서한다는 것</div>
+        <div class="sc2-verse">창 45:1–15</div>
+        <div class="sc2-foot">
+          <span class="sc2-date">2025.05.11</span>
+          <span class="sc2-preacher">홍길동 목사</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 카드 4 -->
+    <a href="#" class="sermon-card rv d4">
+      <div class="sc2-thumb">
+        <div class="sc2-thumb-bg t3"></div>
+        <div class="sc2-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+      </div>
+      <div class="sc2-body">
+        <div class="sc2-series">시편 묵상</div>
+        <div class="sc2-title">두려움 속에서 드리는 찬양</div>
+        <div class="sc2-verse">시 46:1–11</div>
+        <div class="sc2-foot">
+          <span class="sc2-date">2025.05.04</span>
+          <span class="sc2-preacher">홍길동 목사</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 카드 5 -->
+    <a href="#" class="sermon-card rv d1">
+      <div class="sc2-thumb">
+        <div class="sc2-thumb-bg t5"></div>
+        <div class="sc2-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+      </div>
+      <div class="sc2-body">
+        <div class="sc2-series">시편 묵상</div>
+        <div class="sc2-title">여호와는 나의 목자시니 내게 부족함이 없으리로다</div>
+        <div class="sc2-verse">시 23:1–6</div>
+        <div class="sc2-foot">
+          <span class="sc2-date">2025.04.27</span>
+          <span class="sc2-preacher">홍길동 목사</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 카드 6 -->
+    <a href="#" class="sermon-card rv d2">
+      <div class="sc2-thumb">
+        <div class="sc2-thumb-bg t2"></div>
+        <div class="sc2-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+      </div>
+      <div class="sc2-body">
+        <div class="sc2-series">부활절 특별 설교</div>
+        <div class="sc2-title">부활의 아침, 새로운 시작</div>
+        <div class="sc2-verse">요 20:1–18</div>
+        <div class="sc2-foot">
+          <span class="sc2-date">2025.04.20</span>
+          <span class="sc2-preacher">홍길동 목사</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 카드 7 -->
+    <a href="#" class="sermon-card rv d3">
+      <div class="sc2-thumb">
+        <div class="sc2-thumb-bg t6"></div>
+        <div class="sc2-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+      </div>
+      <div class="sc2-body">
+        <div class="sc2-series">요한복음 강해</div>
+        <div class="sc2-title">포도나무와 가지 — 거하라</div>
+        <div class="sc2-verse">요 15:1–11</div>
+        <div class="sc2-foot">
+          <span class="sc2-date">2025.04.13</span>
+          <span class="sc2-preacher">홍길동 목사</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 카드 8 -->
+    <a href="#" class="sermon-card rv d4">
+      <div class="sc2-thumb">
+        <div class="sc2-thumb-bg t1"></div>
+        <div class="sc2-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+      </div>
+      <div class="sc2-body">
+        <div class="sc2-series">요한복음 강해</div>
+        <div class="sc2-title">너희 마음이 근심하지 말라</div>
+        <div class="sc2-verse">요 14:1–14</div>
+        <div class="sc2-foot">
+          <span class="sc2-date">2025.04.06</span>
+          <span class="sc2-preacher">홍길동 목사</span>
+        </div>
+      </div>
+    </a>
+
+  </div>
+  <div class="load-more-wrap">
+    <button class="btn-load">설교 더 보기 ↓</button>
+  </div>
+</section>
+
+<!-- PLAYLIST -->
+<section class="playlist-sec rv" id="playlist">
+  <div class="sec-tag">Series Playlist · 시리즈 재생목록</div>
+  <h2 class="sec-h2" style="color:var(--blanket)">창세기 강해 <em>시리즈</em></h2>
+  <div class="playlist-layout">
+    <div class="playlist-list">
+      <div class="pl-item on">
+        <div class="pl-n">01</div>
+        <div class="pl-title">하나님이 함께하시는 길을 걸으라</div>
+        <div class="pl-date">05.25</div>
+      </div>
+      <div class="pl-item">
+        <div class="pl-n">02</div>
+        <div class="pl-title">약속을 붙드는 자의 씨름</div>
+        <div class="pl-date">05.18</div>
+      </div>
+      <div class="pl-item">
+        <div class="pl-n">03</div>
+        <div class="pl-title">형제를 용서한다는 것</div>
+        <div class="pl-date">05.11</div>
+      </div>
+      <div class="pl-item">
+        <div class="pl-n">04</div>
+        <div class="pl-title">꿈을 주시는 하나님</div>
+        <div class="pl-date">05.04</div>
+      </div>
+      <div class="pl-item">
+        <div class="pl-n">05</div>
+        <div class="pl-title">이삭을 번제로 드리라</div>
+        <div class="pl-date">04.27</div>
+      </div>
+      <div class="pl-item">
+        <div class="pl-n">06</div>
+        <div class="pl-title">아브라함아, 어디 있느냐</div>
+        <div class="pl-date">04.20</div>
+      </div>
+      <div class="pl-item">
+        <div class="pl-n">07</div>
+        <div class="pl-title">땅을 떠나 내가 네게 보여줄 땅으로</div>
+        <div class="pl-date">04.13</div>
+      </div>
+      <div class="pl-item">
+        <div class="pl-n">08</div>
+        <div class="pl-title">태초에 하나님이 창조하시니라</div>
+        <div class="pl-date">04.06</div>
+      </div>
+    </div>
+    <div class="playlist-player">
+      <div class="pp-video">
+        <div class="pp-placeholder">
+          <div class="pp-play">
+            <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+          </div>
+          <div class="pp-label">영상을 선택하세요</div>
+        </div>
+      </div>
+      <div class="pp-info">
+        <div class="pp-series-tag">창세기 강해 · Episode 01</div>
+        <div class="pp-title">하나님이 함께하시는 길을 걸으라</div>
+        <div class="pp-verse">창세기 28:10–22</div>
+        <div class="pp-meta">
+          <div class="pp-meta-item"><strong>설교자</strong> 홍길동 목사</div>
+          <div class="pp-meta-item"><strong>날짜</strong> 2025.05.25</div>
+          <div class="pp-meta-item"><strong>예배</strong> 주일 오전</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-sec rv">
+  <div class="cta-txt">
+    <h3>말씀 묵상도 함께해요</h3>
+    <p>매일 아침 큐티로 말씀을 시작하고<br>설교와 함께 신앙을 세워가세요.</p>
+  </div>
+  <a href="index.html#qt" class="btn-cream">오늘의 큐티 보기 →</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="f-name">루아처치</div>
+      <div class="f-sub">RUAH CHURCH · 온라인 신앙 공동체</div>
+      <p class="f-desc">하나님의 숨결이 머무는<br>온라인 신앙 공동체.</p>
+      <div class="f-sns">
+        <a href="#" class="f-s">Y</a>
+        <a href="#" class="f-s">I</a>
+        <a href="#" class="f-s">K</a>
+      </div>
+    </div>
+    <div class="f-col">
+      <h5>MINISTRY</h5>
+      <ul>
+        <li><a href="#">말씀 &amp; 설교</a></li>
+        <li><a href="index.html#qt">큐티</a></li>
+        <li><a href="#">성경공부</a></li>
+        <li><a href="index.html#community">커뮤니티</a></li>
+      </ul>
+    </div>
+    <div class="f-col">
+      <h5>COMING SOON</h5>
+      <ul>
+        <li><a href="#">기도 <span class="f-bdg">준비중</span></a></li>
+        <li><a href="#">칼럼 <span class="f-bdg">준비중</span></a></li>
+        <li><a href="#">찬양 <span class="f-bdg">준비중</span></a></li>
+        <li><a href="#">양육 과정 <span class="f-bdg">준비중</span></a></li>
+      </ul>
+    </div>
+    <div class="f-col">
+      <h5>INFO</h5>
+      <ul>
+        <li><a href="about.html">교회 소개</a></li>
+        <li><a href="index.html#join">새가족 등록</a></li>
+        <li><a href="#">소그룹 신청</a></li>
+        <li><a href="about.html#contact">문의하기</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 루아처치 · RUAH CHURCH. All rights reserved.</span>
+    <a href="mailto:church@example.com">church@example.com</a>
+  </div>
+</footer>
+
+<script>
+// Intersection Observer
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+}, { threshold: 0.06 });
+document.querySelectorAll('.rv').forEach(el => io.observe(el));
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const id = a.getAttribute('href');
+    if (id === '#') return;
+    const t = document.querySelector(id);
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+
+// Hero filter toggle
+function filterSeries(el, type) {
+  document.querySelectorAll('.ph-filter').forEach(b => b.classList.remove('on'));
+  el.classList.add('on');
+}
+
+// Filter bar toggle
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('on'));
+    this.classList.add('on');
+  });
+});
+
+// Playlist item click
+document.querySelectorAll('.pl-item').forEach(item => {
+  item.addEventListener('click', function() {
+    document.querySelectorAll('.pl-item').forEach(i => i.classList.remove('on'));
+    this.classList.add('on');
+    // 실제 구현 시 여기서 영상 교체 로직 추가
+  });
+});
+
+// Play featured video placeholder
+function playFeatured(el) {
+  // 실제 유튜브 embed URL로 교체
+  // el.innerHTML = '<iframe src="https://www.youtube.com/embed/VIDEO_ID?autoplay=1&rel=0" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>';
+  alert('유튜브 영상 ID를 설정해 주세요.\n(video-placeholder onclick에서 iframe embed로 교체)');
+}
+
+// Copy link
+function copyLink() {
+  navigator.clipboard.writeText(window.location.href).then(() => {
+    alert('링크가 복사되었습니다.');
+  });
+}
+</script>
+</body>
+</html>
