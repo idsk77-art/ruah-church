@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>온라인교회 등록 - 루아처치 | RUAH CHURCH</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Pretendard & Noto Serif KR -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Pretendard', 'sans-serif'],
+                        serif: ['"Noto Serif KR"', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            stone: '#f5f4f0', 
+                            sand: '#e8e5dc',
+                            clay: '#c8a98b',
+                            forest: '#2a3b32', 
+                            charcoal: '#1a1a1a',
+                        }
+                    },
+                    borderRadius: {
+                        '4xl': '2rem',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Pretendard', sans-serif; background-color: #f5f4f0; -webkit-font-smoothing: antialiased; }
+        html { scroll-behavior: smooth; }
+        .word-keep { word-break: keep-all; }
+        
+        .fade-in { animation: fadeIn 1s ease-out forwards; opacity: 0; transform: translateY(20px); }
+        .delay-100 { animation-delay: 0.1s; }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 폼 요소 커스텀 스타일 */
+        input[type="text"], input[type="email"], input[type="tel"], select, textarea {
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        input[type="text"]:focus, input[type="email"]:focus, input[type="tel"]:focus, select:focus, textarea:focus {
+            background-color: #ffffff;
+            border-color: #c8a98b;
+            box-shadow: 0 0 0 3px rgba(200, 169, 139, 0.1);
+        }
+
+        /* 커스텀 라디오 버튼 */
+        .custom-radio {
+            appearance: none;
+            background-color: #f5f4f0;
+            margin: 0;
+            font: inherit;
+            color: currentColor;
+            width: 1.25em;
+            height: 1.25em;
+            border: 2px solid #e8e5dc;
+            border-radius: 50%;
+            display: grid;
+            place-content: center;
+            transition: all 0.2s ease-in-out;
+        }
+        .custom-radio::before {
+            content: "";
+            width: 0.65em;
+            height: 0.65em;
+            border-radius: 50%;
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+            box-shadow: inset 1em 1em #2a3b32;
+        }
+        .custom-radio:checked {
+            border-color: #2a3b32;
+        }
+        .custom-radio:checked::before {
+            transform: scale(1);
+        }
+
+        /* 커스텀 체크박스 */
+        .custom-checkbox {
+            appearance: none;
+            background-color: #f5f4f0;
+            margin: 0;
+            font: inherit;
+            color: currentColor;
+            width: 1.25em;
+            height: 1.25em;
+            border: 2px solid #e8e5dc;
+            border-radius: 0.25em;
+            display: grid;
+            place-content: center;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+        }
+        .custom-checkbox::before {
+            content: "";
+            width: 0.65em;
+            height: 0.65em;
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+            box-shadow: inset 1em 1em white;
+            background-color: white;
+            clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+        }
+        .custom-checkbox:checked {
+            background-color: #2a3b32;
+            border-color: #2a3b32;
+        }
+        .custom-checkbox:checked::before {
+            transform: scale(1);
+        }
+        
+        /* 스크롤바 커스텀 (약관 영역) */
+        .terms-scroll::-webkit-scrollbar { width: 6px; }
+        .terms-scroll::-webkit-scrollbar-track { background: #f5f4f0; border-radius: 4px; }
+        .terms-scroll::-webkit-scrollbar-thumb { background: #c8a98b; border-radius: 4px; }
+    </style>
+</head>
+<body class="text-brand-charcoal selection:bg-brand-clay selection:text-white pb-20">
+
+    <!-- Header -->
+    <header class="fixed w-full top-0 z-50 transition-all duration-300 bg-brand-stone/90 backdrop-blur-md" id="header">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="flex justify-between items-center h-24">
+                <div class="flex-shrink-0">
+                    <a href="index.html" class="text-2xl font-bold tracking-tighter text-brand-forest">
+                        RUAH<span class="font-light">CHURCH</span>
+                    </a>
+                </div>
+                
+                <nav class="hidden lg:flex items-center space-x-10">
+                    <a href="about.html" class="text-brand-charcoal text-sm font-medium hover:text-brand-clay transition-colors">교회소개</a>
+                    <a href="#" class="text-brand-charcoal text-sm font-medium hover:text-brand-clay transition-colors">예수동행양육과정</a>
+                    <a href="sermons.html" class="text-brand-charcoal text-sm font-medium hover:text-brand-clay transition-colors">설교</a>
+                    <a href="#" class="text-brand-charcoal text-sm font-medium hover:text-brand-clay transition-colors">루아스토리</a>
+                    
+                    <a href="#" class="bg-brand-forest text-brand-stone px-6 py-3 rounded-full text-sm font-bold hover:bg-brand-charcoal transition-colors">
+                        방문하기
+                    </a>
+                </nav>
+
+                <div class="lg:hidden flex items-center">
+                    <button class="text-brand-charcoal p-2 focus:outline-none">
+                        <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Title Section -->
+    <section class="pt-40 pb-12 px-6">
+        <div class="max-w-3xl mx-auto text-center fade-in">
+            <h1 class="text-3xl md:text-5xl font-serif text-brand-forest font-bold leading-tight mb-6 word-keep">
+                온라인교회 등록 신청
+            </h1>
+            <p class="text-base md:text-lg text-brand-charcoal/70 font-medium word-keep mb-8">
+                새가족상담 간사가 신청내용 확인 후 카톡이나 문자, 이메일로 연락을 드릴 예정입니다.<br class="hidden md:block">
+                응답해주셔야 상담이 진행됩니다.
+            </p>
+            
+            <a href="#" class="inline-flex items-center text-sm font-bold text-brand-charcoal border border-brand-sand bg-white px-5 py-2.5 rounded-full hover:bg-brand-sand transition-colors">
+                해외 거주자 신청 
+                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- Registration Form Section -->
+    <section class="px-6 lg:px-12 pb-24">
+        <div class="max-w-3xl mx-auto bg-white rounded-[2rem] shadow-sm border border-brand-sand p-8 md:p-12 fade-in delay-100">
+            
+            <form action="#" method="POST" class="space-y-8">
+                
+                <!-- 1. 소속교회 선택 -->
+                <div>
+                    <label class="block text-sm font-bold text-brand-charcoal mb-2">소속 캠퍼스를 선택하세요 <span class="text-red-500">*</span></label>
+                    <div class="relative">
+                        <select class="w-full bg-brand-stone border-2 border-transparent text-brand-charcoal rounded-xl px-4 py-3.5 appearance-none cursor-pointer">
+                            <option value="" disabled selected>캠퍼스 선택</option>
+                            <option value="online">루아처치 (온라인)</option>
+                            <option value="offline">루아처치 (오프라인/판교)</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-brand-charcoal/50">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- 2. 이름 -->
+                    <div>
+                        <label class="block text-sm font-bold text-brand-charcoal mb-2">이름 <span class="text-red-500">*</span></label>
+                        <input type="text" placeholder="이름을 입력하세요" required
+                            class="w-full bg-brand-stone border-2 border-transparent text-brand-charcoal rounded-xl px-4 py-3.5 placeholder-brand-charcoal/30">
+                    </div>
+
+                    <!-- 3. 성별 -->
+                    <div>
+                        <label class="block text-sm font-bold text-brand-charcoal mb-3">성별 <span class="text-red-500">*</span></label>
+                        <div class="flex items-center space-x-6 h-12">
+                            <label class="flex items-center cursor-pointer group">
+                                <input type="radio" name="gender" value="male" class="custom-radio mr-2">
+                                <span class="text-brand-charcoal font-medium group-hover:text-brand-forest transition-colors">남성</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer group">
+                                <input type="radio" name="gender" value="female" class="custom-radio mr-2">
+                                <span class="text-brand-charcoal font-medium group-hover:text-brand-forest transition-colors">여성</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- 4. 연락처 -->
+                    <div>
+                        <label class="block text-sm font-bold text-brand-charcoal mb-2">전화번호 <span class="text-red-500">*</span></label>
+                        <input type="tel" placeholder="연락받으실 전화번호 (숫자만 입력)" required
+                            class="w-full bg-brand-stone border-2 border-transparent text-brand-charcoal rounded-xl px-4 py-3.5 placeholder-brand-charcoal/30">
+                    </div>
+
+                    <!-- 5. 생년월일 -->
+                    <div>
+                        <label class="block text-sm font-bold text-brand-charcoal mb-2">생년월일 <span class="text-red-500">*</span></label>
+                        <input type="text" placeholder="예) 1980-03-20" required
+                            class="w-full bg-brand-stone border-2 border-transparent text-brand-charcoal rounded-xl px-4 py-3.5 placeholder-brand-charcoal/30">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- 6. 이메일 -->
+                    <div>
+                        <label class="block text-sm font-bold text-brand-charcoal mb-2">이메일 <span class="text-red-500">*</span></label>
+                        <input type="email" placeholder="이메일을 입력하세요" required
+                            class="w-full bg-brand-stone border-2 border-transparent text-brand-charcoal rounded-xl px-4 py-3.5 placeholder-brand-charcoal/30">
+                    </div>
+
+                    <!-- 7. 지역 -->
+                    <div>
+                        <label class="block text-sm font-bold text-brand-charcoal mb-2">지역 (도/도시) <span class="text-red-500">*</span></label>
+                        <input type="text" placeholder="도 또는 도시명을 입력하세요" required
+                            class="w-full bg-brand-stone border-2 border-transparent text-brand-charcoal rounded-xl px-4 py-3.5 placeholder-brand-charcoal/30">
+                    </div>
+                </div>
+
+                <!-- 신앙 정보 추가 (일반적인 교회 등록 양식 기반) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- 8. 신앙 단계 -->
+                    <div>
+                        <label class="block text-sm font-bold text-brand-charcoal mb-2">신앙 배경 <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <select class="w-full bg-brand-stone border-2 border-transparent text-brand-charcoal rounded-xl px-4 py-3.5 appearance-none cursor-pointer">
+                                <option value="" disabled selected>선택해주세요</option>
+                                <option value="new">처음 교회를 나옵니다</option>
+                                <option value="transfer">타교회에서 이동합니다</option>
+                                <option value="rejoin">오랜만에 신앙생활을 다시 시작합니다</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-brand-charcoal/50">
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 9. 이전교회 -->
+                    <div>
+                        <label class="block text-sm font-bold text-brand-charcoal mb-2">이전교회 교단/교회명</label>
+                        <input type="text" placeholder="교단과 교회명을 입력하세요 (해당 시)"
+                            class="w-full bg-brand-stone border-2 border-transparent text-brand-charcoal rounded-xl px-4 py-3.5 placeholder-brand-charcoal/30">
+                    </div>
+                </div>
+
+                <!-- 10. 가족 -->
+                <div>
+                    <label class="block text-sm font-bold text-brand-charcoal mb-2">등록신청 가족</label>
+                    <input type="text" placeholder="본인 외에 함께 등록하는 가족이 있을 시 기재 (이름/관계)"
+                        class="w-full bg-brand-stone border-2 border-transparent text-brand-charcoal rounded-xl px-4 py-3.5 placeholder-brand-charcoal/30">
+                </div>
+
+                <!-- 11. 내용 -->
+                <div>
+                    <label class="block text-sm font-bold text-brand-charcoal mb-2">내용 <span class="text-red-500">*</span></label>
+                    <textarea rows="4" placeholder="루아처치 온라인교회에 등록이 필요한 이유나 기도제목에 대해서 상세히 작성해 주세요" required
+                        class="w-full bg-brand-stone border-2 border-transparent text-brand-charcoal rounded-xl px-4 py-3.5 placeholder-brand-charcoal/30 resize-none"></textarea>
+                </div>
+
+                <hr class="border-brand-sand my-8">
+
+                <!-- 12. 개인정보 동의 -->
+                <div class="bg-brand-stone/50 p-6 rounded-2xl border border-brand-sand/50">
+                    <label class="block text-sm font-bold text-brand-charcoal mb-4">개인정보의 수집 및 이용 안내</label>
+                    
+                    <div class="bg-white border border-brand-sand rounded-xl p-4 h-32 overflow-y-auto terms-scroll mb-4 text-sm text-brand-charcoal/70 leading-relaxed word-keep">
+                        <strong class="text-brand-charcoal block mb-2">이용 약관 ("약관")</strong>
+                        루아처치(이하 "교회"라 합니다)가 수집 및 이용하는 본인의 개인정보는 『정보통신망이용촉진 및 정보보호 등에 관한 법률』 에 따라 본인의 동의를 얻어야 하는 정보입니다. 본인은 교회의 개인정보 수집, 이용에 동의합니다.<br><br>
+                        <strong>1. 수집하는 개인정보의 항목</strong><br>
+                        - 입력항목: 이름, 연락처, 이메일, 주소, 생년월일, 소속 등<br>
+                        - 자동수집항목: 서비스 이용 기록 등<br><br>
+                        <strong>2. 개인정보의 수집 및 이용 목적</strong><br>
+                        - 교적 등록, 새가족 양육, 심방, 교구 및 속회 배정, 교회 행사 안내 등<br><br>
+                        <strong>3. 개인정보의 보유 및 이용 기간</strong><br>
+                        - 등록 취소 또는 삭제 요청 시까지 지체 없이 파기합니다.
+                    </div>
+                    
+                    <label class="flex items-center cursor-pointer group">
+                        <input type="checkbox" required class="custom-checkbox mr-3">
+                        <span class="text-sm font-bold text-brand-charcoal group-hover:text-brand-forest transition-colors">위 개인정보 수집 및 이용에 동의합니다 <span class="text-red-500">*</span></span>
+                    </label>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="pt-6">
+                    <button type="submit" class="w-full md:w-auto bg-brand-charcoal text-white px-12 py-4 rounded-full text-lg font-bold hover:bg-brand-forest transition-colors shadow-lg flex items-center justify-center gap-2">
+                        제출하기
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-brand-charcoal text-brand-stone/70 py-20 px-6 lg:px-12">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-8">
+            <div class="md:col-span-5 lg:col-span-4">
+                <a href="index.html" class="text-3xl font-bold tracking-tighter text-white block mb-6">
+                    RUAH<span class="font-light text-brand-clay">CHURCH</span>
+                </a>
+                <p class="text-sm leading-relaxed mb-8 max-w-sm word-keep">
+                    루아처치는 온라인 예배와 예수동행일기 플랫폼을 기반으로 예수동행운동을 세우며 사역을 돕는 감리교회입니다.
+                </p>
+            </div>
+            
+            <div class="md:col-span-3 lg:col-span-3 lg:col-start-6">
+                <h4 class="text-white font-medium mb-6 uppercase tracking-wider text-sm">Explore</h4>
+                <ul class="space-y-4 text-sm">
+                    <li><a href="about.html" class="hover:text-white transition-colors">교회소개</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">예수동행양육과정</a></li>
+                    <li><a href="sermons.html" class="hover:text-white transition-colors">설교 보기</a></li>
+                </ul>
+            </div>
+
+            <div class="md:col-span-4 lg:col-span-4">
+                <h4 class="text-white font-medium mb-6 uppercase tracking-wider text-sm">Contact & Location</h4>
+                <ul class="space-y-4 text-sm">
+                    <li class="flex items-start">
+                        <span class="block w-16 text-brand-stone/50">센터 주소</span>
+                        <span class="flex-1">경기도 성남시 분당구 운중동 35</span>
+                    </li>
+                    <li class="flex items-center">
+                        <span class="block w-16 text-brand-stone/50">연락처</span>
+                        <span class="flex-1">070-4480-1591</span>
+                    </li>
+                    <li class="flex items-center">
+                        <span class="block w-16 text-brand-stone/50">이메일</span>
+                        <span class="flex-1">telecine@hanmail.net</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto mt-20 pt-8 border-t border-white/10 text-xs text-brand-stone/40 flex flex-col md:flex-row justify-between items-center">
+            <p>&copy; 2026 RUAH CHURCH. All rights reserved.</p>
+            <p class="mt-2 md:mt-0">기독교대한감리회 소속</p>
+        </div>
+    </footer>
+
+    <script>
+        // Header scroll effect
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('shadow-sm');
+                header.classList.replace('bg-brand-stone/90', 'bg-brand-stone');
+            } else {
+                header.classList.remove('shadow-sm');
+                header.classList.replace('bg-brand-stone', 'bg-brand-stone/90');
+            }
+        });
+    </script>
+</body>
+</html>
